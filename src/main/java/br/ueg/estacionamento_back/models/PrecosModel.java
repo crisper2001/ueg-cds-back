@@ -34,11 +34,11 @@ public class PrecosModel implements IGenericModel<Long> {
     private int tempoInicial;
 
     @NotNull
-    @Column(name = "precos-inicial", nullable = false)
+    @Column(name = "precos_inicial", nullable = false)
     private float precosInicial;
 
     @NotNull
-    @Column(name = "precos-adicional", nullable = false)
+    @Column(name = "precos_adicional", nullable = false)
     private float precosAdicional;
 
 }
