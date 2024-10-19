@@ -14,31 +14,31 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "PRECO")
-public class PrecoModel implements IGenericModel<Long> {
+@Table(name = "PRECOS")
+public class PrecosModel implements IGenericModel<Long> {
 
     @Id
     @SequenceGenerator(
-            name = "preco_sequence",
-            sequenceName = "preco_sequence_bd",
+            name = "precos_sequence",
+            sequenceName = "precos_sequence_bd",
             allocationSize = 1
     )
     @GeneratedValue(
             strategy = SEQUENCE,
-            generator = "preco_sequence"
+            generator = "precos_sequence"
     )
     private Long id;
 
     @NotNull
     @Column(name = "Iempo_Inicial", nullable = false)
-    private Integer tempoinicial;
+    private Integer tempoInicial;
 
     @NotNull
-    @Column(name = "Preco-Inicial", nullable = false)
-    private Integer precoinicial;
+    @Column(name = "Precos-Inicial", nullable = false)
+    private float precosInicial;
 
     @NotNull
-    @Column(name = "Preco-Adicional", nullable = false)
-    private Integer precoadicional;
+    @Column(name = "Precos-Adicional", nullable = false)
+    private float precosAdicional;
 
 }
