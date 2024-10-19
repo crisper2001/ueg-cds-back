@@ -35,10 +35,10 @@ public class VagaModel implements IGenericModel<Long> {
 
     @NotNull
     @Column(name = "loc_horizontal_vaga", nullable = false)
-    private int lococaoHorizontal;
+    private int localizacaoHorizontal;
 
     @NotNull
     @Column(name = "loc_vertical_vaga", nullable = false)
-    private int locacaoVertical;
+    private int localizacaoVertical;
 
 }

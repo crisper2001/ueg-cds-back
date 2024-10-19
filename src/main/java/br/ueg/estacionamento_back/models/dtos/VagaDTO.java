@@ -16,8 +16,8 @@ public class VagaDTO {
     private int numero;
 
     @Schema(example = "4")
-    private int lococaoHorizontal;
+    private int localizacaoHorizontal;
 
     @Schema(example = "8")
-    private int locacaoVertical;
+    private int localizacaoVertical;
 }
