@@ -31,7 +31,7 @@ public class PrecosModel implements IGenericModel<Long> {
 
     @NotNull
     @Column(name = "tempo_inicial", nullable = false)
-    private Integer tempoInicial;
+    private int tempoInicial;
 
     @NotNull
     @Column(name = "precos-inicial", nullable = false)
