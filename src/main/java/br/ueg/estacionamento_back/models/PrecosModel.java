@@ -30,15 +30,15 @@ public class PrecosModel implements IGenericModel<Long> {
     private Long id;
 
     @NotNull
-    @Column(name = "Iempo_Inicial", nullable = false)
+    @Column(name = "tempo_inicial", nullable = false)
     private Integer tempoInicial;
 
     @NotNull
-    @Column(name = "Precos-Inicial", nullable = false)
+    @Column(name = "precos-inicial", nullable = false)
     private float precosInicial;
 
     @NotNull
-    @Column(name = "Precos-Adicional", nullable = false)
+    @Column(name = "precos-adicional", nullable = false)
     private float precosAdicional;
 
 }

@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class PrecosDTO {
 
     @Schema(example = "99" )
-    private Integer tempoInicial;
+    private int tempoInicial;
 
     @Schema(example = "2.50")
     private float precosInicial;
