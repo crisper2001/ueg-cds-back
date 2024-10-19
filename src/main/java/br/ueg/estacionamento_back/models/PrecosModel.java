@@ -15,7 +15,7 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "PRECOS")
-public class PrecoModel implements IGenericModel<Long> {
+public class PrecosModel implements IGenericModel<Long> {
 
     @Id
     @SequenceGenerator(
