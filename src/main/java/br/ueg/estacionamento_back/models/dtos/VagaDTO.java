@@ -10,14 +10,14 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PrecosDTO {
+public class VagaDTO {
 
-    @Schema(example = "99" )
-    private int tempoInicial;
+    @Schema(example = "28")
+    private int numero;
 
-    @Schema(example = "2.50")
-    private float precosInicial;
+    @Schema(example = "4")
+    private int localizacaoHorizontal;
 
-    @Schema(example = "44.00")
-    private float precosAdicional;
+    @Schema(example = "8")
+    private int localizacaoVertical;
 }
