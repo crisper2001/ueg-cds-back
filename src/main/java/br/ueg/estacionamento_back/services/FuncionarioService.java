@@ -1,84 +1,99 @@
 package br.ueg.estacionamento_back.services;
 
-import br.ueg.estacionamento_back.exceptions.CustomException;
-import br.ueg.estacionamento_back.models.FuncionarioModel;
-import br.ueg.estacionamento_back.repositories.FuncionarioRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-@Service
-public class FuncionarioService implements IGenericService<FuncionarioModel> {
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import br.ueg.estacionamento_back.models.FuncionarioModel;
+import br.ueg.estacionamento_back.repositories.FuncionarioRepository;
+import jakarta.validation.Valid;
+
+@Service
+public class FuncionarioService {
+    
     @Autowired
     private FuncionarioRepository repository;
 
-    @Override
-    public FuncionarioModel create(FuncionarioModel f) {
-        f.setId(null);
-        validateBusinessLogic(f);
-        return repository.save(f);
+    public FuncionarioModel create(@Valid FuncionarioModel funcionarioModel) {
+        Optional<FuncionarioModel> existingFuncionario = validateFuncionarioExistsByEmail(funcionarioModel.getEmail());
+
+        if (existingFuncionario.isPresent()) {
+            throw new IllegalArgumentException("Email already exists");
+        }
+
+        return repository.save(funcionarioModel);
     }
 
-    @Override
+    private Optional<FuncionarioModel> validateFuncionarioExistsByEmail(String email) {
+        return repository.findByEmail(email);
+    }
+
     public List<FuncionarioModel> getAll() {
         return repository.findAll();
     }
 
-    @Override
-    public FuncionarioModel getById(long id) {
-        return validateIdExists(id);
+    public Optional<FuncionarioModel> getById(Long id) {
+        return validateFuncionarioExists(id);
     }
 
-    @Override
-    public FuncionarioModel updateById(FuncionarioModel fUpdate) {
-        FuncionarioModel f = validateIdExists(fUpdate.getId());
-        validateBusinessLogic(fUpdate);
-        updateDataDB(f, fUpdate);
-        return repository.save(f);
-    }
-
-    @Override
-    public FuncionarioModel deleteById(long id) {
-        FuncionarioModel f = validateIdExists(id);
-        repository.delete(f);
-        return f;
-    }
-
-    @Override
-    public void validateBusinessLogic(FuncionarioModel f) {
-        // Verifica se o nome de usuário já existe
-        Optional<FuncionarioModel> existingFuncionario = repository.findByNomeUsuario(f.getNomeUsuario());
-        if (existingFuncionario.isPresent() && !existingFuncionario.get().getId().equals(f.getId())) {
-            throw new CustomException("ERRO: Já existe um funcionário com o nome de usuário informado.");
+    public Optional<FuncionarioModel> updateById(Long id, @Valid FuncionarioModel funcionarioUpdate) {
+        Optional<FuncionarioModel> funcionarioOpt = validateFuncionarioExists(id);
+        if (funcionarioOpt.isPresent()) {
+            FuncionarioModel funcionario = funcionarioOpt.get();
+            updateDataDB(funcionario, funcionarioUpdate);
+            repository.save(funcionario);
+            return Optional.of(funcionario);
         }
+        return Optional.empty();
     }
 
-    @Override
-    public FuncionarioModel validateIdExists(long id) {
-        FuncionarioModel f = null;
+    public Optional<FuncionarioModel> deleteById(Long id) {
+        Optional<FuncionarioModel> funcionarioOpt = validateFuncionarioExists(id);
+        if (funcionarioOpt.isPresent()) {
+            FuncionarioModel funcionario = funcionarioOpt.get();
+            repository.delete(funcionario);
+            return Optional.of(funcionario);
+        }
+        return Optional.empty();
+    }
+
+    public Optional<FuncionarioModel> validateFuncionarioExists(Long id) {
+        FuncionarioModel funcionarioModel = null;
         if (Objects.nonNull(id)) {
-            f = this.internalGet(id);
+            funcionarioModel = this.internalGet(id);
         }
-        if (f == null) {
-            throw new CustomException("ERRO: Não existe um funcionário com o ID informado.");
-        }
-        return f;
+        return Optional.ofNullable(funcionarioModel);
     }
 
-    @Override
-    public FuncionarioModel internalGet(long id) {
-        Optional<FuncionarioModel> f = repository.findById(id);
-        return f.orElse(null);
+    public FuncionarioModel internalGet(Long id) {
+        Optional<FuncionarioModel> funcionarioModel = repository.findById(id);
+        return funcionarioModel.orElse(null);
     }
 
-    @Override
-    public void updateDataDB(FuncionarioModel f, FuncionarioModel fUpdate) {
-        f.setNomeCompleto(fUpdate.getNomeCompleto());
-        f.setNomeUsuario(fUpdate.getNomeUsuario());
-        f.setSenha(fUpdate.getSenha());
+    public void updateDataDB(@Valid FuncionarioModel funcionario, @Valid FuncionarioModel funcionarioUpdate) {
+        if (Objects.nonNull(funcionarioUpdate.getNome())) {
+            funcionario.setNome(funcionarioUpdate.getNome());
+        }
+        if (Objects.nonNull(funcionarioUpdate.getEmail())) {
+            funcionario.setEmail(funcionarioUpdate.getEmail());
+        }
+        if (Objects.nonNull(funcionarioUpdate.getSenha())) {
+            funcionario.setSenha(funcionarioUpdate.getSenha());
+        }
     }
+
+    public Optional<FuncionarioModel> login(String email, String senha) {
+        Optional<FuncionarioModel> funcionarioOpt = repository.findByEmail(email);
+        if (funcionarioOpt.isPresent()) {
+            FuncionarioModel funcionario = funcionarioOpt.get();
+            if (funcionario.getSenha().equals(senha)) {
+                return Optional.of(funcionario);
+            }
+        }
+        return Optional.empty();
+    }
+
 }
