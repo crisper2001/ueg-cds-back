@@ -14,33 +14,37 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "VAGA")
-public class VagaModel {
-    
+@Table(name = "PRECO")
+public class PrecoModel {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false, nullable = false)
     private Long id;
-    
-    @NotBlank
-    @Column(name = "numero")
-    private Integer numero;
 
-    @NotBlank
-    @Column(name = "localizacao_horizontal")
-    private Integer locHorizontal;
+    @NotNull
+    @Column(name = "tempo_inicial")
+    private Integer tempoInicial;
 
-    @NotBlank
-    @Column(name = "localizacao_vertical")
-    private Integer locVertical;
+    @NotNull
+    @Column(name = "tempo_adicional")
+    private Integer tempoAdicional;
+
+    @NotNull
+    @Column(name = "valor_inicial")
+    private Double valorInicial;
+
+    @NotNull
+    @Column(name = "valor_adicional")
+    private Double valorAdicional;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "vaga", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "preco", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<PermanenciaModel> permanencia = new ArrayList<>();
-    
+
 }

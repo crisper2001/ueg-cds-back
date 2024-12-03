@@ -1,23 +1,22 @@
 package br.ueg.estacionamento_back.models.dtos;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class VagaDTO {
 
-    @Schema(example = "28")
-    private int numero;
+    @Schema(description = "O número da vaga", example = "1", required = true)
+    @NotBlank
+    private Integer numero;
+    
+    @Schema(description = "A localização horizontal da vaga", example = "1", required = true)
+    @NotBlank
+    private Integer localizacaoHorizontal;
 
-    @Schema(example = "4")
-    private int localizacaoHorizontal;
-
-    @Schema(example = "8")
-    private int localizacaoVertical;
+    @Schema(description = "A localização vertical da vaga", example = "1", required = true)
+    @NotBlank
+    private Integer localizacaoVertical;
+    
 }
