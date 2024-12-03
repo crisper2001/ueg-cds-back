@@ -1,92 +1,115 @@
 package br.ueg.estacionamento_back.controllers;
 
-import br.ueg.estacionamento_back.mappers.GenericMapper;
-import br.ueg.estacionamento_back.models.FuncionarioModel;
-import br.ueg.estacionamento_back.models.dtos.FuncionarioDTO;
-import br.ueg.estacionamento_back.services.FuncionarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
+import br.ueg.estacionamento_back.mappers.FuncionarioMapper;
+import br.ueg.estacionamento_back.models.FuncionarioModel;
+import br.ueg.estacionamento_back.models.dtos.FuncionarioCreateDTO;
+import br.ueg.estacionamento_back.models.dtos.FuncionarioLoginDTO;
+import br.ueg.estacionamento_back.models.dtos.FuncionarioUpdateDTO;
+import br.ueg.estacionamento_back.services.FuncionarioService;
+
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping(path = "${api.version}/estacionamento-back/funcionario")
+@RequestMapping(path = "/funcionarios")
 public class FuncionarioController {
 
     @Autowired
-    private FuncionarioService service;
+    private FuncionarioService funcionarioService;
 
     @Autowired
-    private GenericMapper mapper;
+    private FuncionarioMapper funcionarioMapper;
 
     @PostMapping
-    @Operation(description = "Endpoint para adiconar novos funcionários.")
-    public ResponseEntity<Object> create(@Valid @RequestBody FuncionarioDTO dto) {
+    @Operation(description = "Endpoint para adicionar um funcionário")
+    public ResponseEntity<Object> create(@Valid @RequestBody FuncionarioCreateDTO funcionarioCreateDTO) {
         try {
-            FuncionarioModel f = service.create(mapper.map(dto, FuncionarioModel.class)); //Uso da classe com reflexão aqui!
-            return ResponseEntity.ok(f);
+            FuncionarioModel funcionario = funcionarioService.create(funcionarioMapper.toFuncionarioModel(funcionarioCreateDTO));
+            return ResponseEntity.status(HttpStatus.CREATED).body(funcionario);
         } catch (Exception e) {
-            e.printStackTrace();
-            if (e.getMessage().startsWith("ERRO:")) {
-                return ResponseEntity.badRequest().body(e.getMessage());
-            } else {
-                return errorMessage(e);
-            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
     @GetMapping
-    @Operation(description = "Endpoint para listar todos os funcionários.")
+    @Operation(description = "Endpoint para listar todos os funcionários")
     public ResponseEntity<Object> getAll() {
         try {
-            return ResponseEntity.of(Optional.ofNullable(service.getAll()));
+            List<FuncionarioModel> funcionarios = funcionarioService.getAll();
+            if (funcionarios == null || funcionarios.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
+            }
+            return ResponseEntity.ok(funcionarios);
         } catch (Exception e) {
-            return errorMessage(e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
-    @GetMapping(path = "/{id}")
-    @Operation(description = "Endpoint para procurar um funcionário pelo seu ID.")
-    public ResponseEntity<Object> getById(@PathVariable("id") long id) {
+    @GetMapping("/{id}")
+    @Operation(description = "Endpoint para exibir os dados de um funcionário pelo ID")
+    public ResponseEntity<Object> getById(@PathVariable Long id) {
         try {
-            return ResponseEntity.of(Optional.ofNullable(service.getById(id)));
+            Optional<FuncionarioModel> funcionario = funcionarioService.getById(id);
+            if (funcionario.isPresent()) {
+                return ResponseEntity.ok(funcionario);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
+            }
         } catch (Exception e) {
-            return errorMessage(e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
-    @PutMapping(path = "/{id}")
-    @Operation(description = "Endpoint para atualizar os dados de um funcionário a partir de seu ID.")
-    public ResponseEntity<Object> updateById(
-            @PathVariable("id") long id,
-            @Valid @RequestBody FuncionarioDTO dto) {
+    @PutMapping("/{id}")
+    @Operation(description = "Endpoint para atualizar os dados de um funcionário pelo ID")
+    public ResponseEntity<Object> updateById(@PathVariable Long id, @Valid @RequestBody FuncionarioUpdateDTO funcionarioUpdateDTO) {
         try {
-            FuncionarioModel f = mapper.map(dto, FuncionarioModel.class); // Uso da classe com reflexão aqui!
-            f.setId(id);
-            return ResponseEntity.of(Optional.ofNullable(service.updateById(f)));
+            Optional<FuncionarioModel> funcionario = funcionarioService.updateById(id, funcionarioMapper.toFuncionarioModel(funcionarioUpdateDTO));
+            if (funcionario.isPresent()) {
+                return ResponseEntity.ok(funcionario);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
+            }
         } catch (Exception e) {
-            return errorMessage(e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
-    @DeleteMapping(path = "/{id}")
-    @Operation(description = "Endpoint para apagar um funcionário a partir de seu ID.")
+    @DeleteMapping("/{id}")
+    @Operation(description = "Endpoint para deletar um funcionário pelo ID")
     public ResponseEntity<Object> deleteById(@PathVariable("id") long id) {
         try {
-            return ResponseEntity.of(Optional.ofNullable(service.deleteById(id)));
+            Optional<FuncionarioModel> funcionario = funcionarioService.deleteById(id);
+            if (funcionario.isPresent()) {
+                return ResponseEntity.ok(funcionario);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
+            }
         } catch (Exception e) {
-            return errorMessage(e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
-    public ResponseEntity<Object> errorMessage(Exception e) {
-        if (e.getMessage().startsWith("ERRO: Não") || e.getMessage().startsWith("Erro: Um funcionário")) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } else {
-            return ResponseEntity.internalServerError().body("ERRO: Occorreu um problema no servidor.");
+    @PostMapping("/login")
+    @Operation(description = "Endpoint para fazer login")
+    public ResponseEntity<Object> login(@Valid @RequestBody FuncionarioLoginDTO funcionarioLoginDTO) {
+        try {
+            Optional<FuncionarioModel> funcionario = funcionarioService.login(funcionarioLoginDTO.getEmail(), funcionarioLoginDTO.getSenha());
+            if (funcionario.isPresent()) {
+                return ResponseEntity.ok(funcionario);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
