@@ -27,82 +27,81 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping(path = "/precos")
 public class PrecoController {
-    
-    @Autowired
-    private PrecoService precoService;
 
-    @Autowired
-    private PrecoMapper precoMapper;
+  @Autowired
+  private PrecoService precoService;
 
-    @PostMapping
-    @Operation(description = "Endpoint para adicionar um preço")
-    public ResponseEntity<Object> create(@Valid @RequestBody PrecoDTO precoDTO) {
-        try {
-            PrecoModel preco = precoService.create(precoMapper.toPrecoModel(precoDTO));
-            return ResponseEntity.status(HttpStatus.CREATED).body(preco);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+  @Autowired
+  private PrecoMapper precoMapper;
+
+  @PostMapping
+  @Operation(description = "Endpoint para adicionar um preço")
+  public ResponseEntity<Object> create(@Valid @RequestBody PrecoDTO precoDTO) {
+    try {
+      PrecoModel preco = precoService.create(precoMapper.toPrecoModel(precoDTO));
+      return ResponseEntity.status(HttpStatus.CREATED).body(preco);
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
+  }
 
-    @GetMapping
-    @Operation(description = "Endpoint para listar todos os preços")
-    public ResponseEntity<Object> getAll() {
-        try {
-            List<PrecoModel> precos = precoService.getAll();
-            if (precos == null || precos.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
-            }
-            return ResponseEntity.ok(precos);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
+  @GetMapping
+  @Operation(description = "Endpoint para listar todos os preços")
+  public ResponseEntity<Object> getAll() {
+    try {
+      List<PrecoModel> precos = precoService.getAll();
+      if (precos == null || precos.isEmpty()) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
+      }
+      return ResponseEntity.ok(precos);
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
     }
+  }
 
-    @GetMapping("/{id}")
-    @Operation(description = "Endpoint para exibir os dados de um preço pelo ID")
-    public ResponseEntity<Object> getById(@PathVariable Long id) {
-        try {
-            Optional<PrecoModel> preco = precoService.getById(id);
-            if (preco.isPresent()) {
-                return ResponseEntity.ok(preco);
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
+  @GetMapping("/{id}")
+  @Operation(description = "Endpoint para exibir os dados de um preço pelo ID")
+  public ResponseEntity<Object> getById(@PathVariable Long id) {
+    try {
+      Optional<PrecoModel> preco = precoService.getById(id);
+      if (preco.isPresent()) {
+        return ResponseEntity.ok(preco);
+      } else {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
+      }
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
     }
+  }
 
-    @PutMapping("/{id}")
-    @Operation(description = "Endpoint para atualizar os dados de um preço pelo ID")
-    public ResponseEntity<Object> updateById(@PathVariable Long id, @Valid @RequestBody PrecoDTO precoDTO) {
-        try {
-            Optional<PrecoModel> preco = precoService.updateById(id, precoMapper.toPrecoModel(precoDTO));
-            if (preco.isPresent()) {
-                return ResponseEntity.ok(preco);
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
+  @PutMapping("/{id}")
+  @Operation(description = "Endpoint para atualizar os dados de um preço pelo ID")
+  public ResponseEntity<Object> updateById(@PathVariable Long id, @Valid @RequestBody PrecoDTO precoDTO) {
+    try {
+      Optional<PrecoModel> preco = precoService.updateById(id, precoMapper.toPrecoModel(precoDTO));
+      if (preco.isPresent()) {
+        return ResponseEntity.ok(preco);
+      } else {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
+      }
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
     }
+  }
 
-    @DeleteMapping("/{id}")
-    @Operation(description = "Endpoint para deletar um preço pelo ID")
-    public ResponseEntity<Object> deleteById(@PathVariable("id") Long id) {
-        try {
-            Optional<PrecoModel> preco = precoService.deleteById(id);
-            if (preco.isPresent()) {
-                return ResponseEntity.ok(preco);
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
+  @DeleteMapping("/{id}")
+  @Operation(description = "Endpoint para deletar um preço pelo ID")
+  public ResponseEntity<Object> deleteById(@PathVariable("id") Long id) {
+    try {
+      Optional<PrecoModel> preco = precoService.deleteById(id);
+      if (preco.isPresent()) {
+        return ResponseEntity.ok(preco);
+      } else {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
+      }
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
     }
+  }
 
 }
-

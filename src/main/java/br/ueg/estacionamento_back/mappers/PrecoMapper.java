@@ -8,14 +8,15 @@ import jakarta.validation.Valid;
 
 @Component
 public class PrecoMapper {
-    
-    public PrecoModel toPrecoModel(@Valid PrecoDTO precoDTO) {
-        PrecoModel precoModel = new PrecoModel();
-        precoModel.setTempoInicial(precoDTO.getTempoInicial());
-        precoModel.setTempoAdicional(precoDTO.getTempoAdicional());
-        precoModel.setValorInicial(precoDTO.getValorInicial());
-        precoModel.setValorAdicional(precoDTO.getValorAdicional());
-        return precoModel;
-    }
+
+  public PrecoModel toPrecoModel(@Valid PrecoDTO precoDTO) {
+    PrecoModel precoModel = new PrecoModel();
+    precoModel.setTempoInicial(precoDTO.getTempoInicial());
+    precoModel.setTempoAdicional(precoDTO.getTempoAdicional());
+    precoModel.setValorInicial(precoDTO.getValorInicial());
+    precoModel.setValorAdicional(precoDTO.getValorAdicional());
+    System.out.println(precoModel);
+    return precoModel;
+}
 
 }
