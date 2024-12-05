@@ -10,8 +10,8 @@ public class VagaMapper {
     public VagaModel toVagaModel(VagaDTO vagaDTO) {
         VagaModel vagaModel = new VagaModel();
         vagaModel.setNumero(vagaDTO.getNumero());
-        vagaModel.setLocHorizontal(vagaDTO.getLocalizacaoHorizontal());
-        vagaModel.setLocVertical(vagaDTO.getLocalizacaoVertical());
+        vagaModel.setLocHorizontal(vagaDTO.getLocHorizontal());
+        vagaModel.setLocVertical(vagaDTO.getLocVertical());
         return vagaModel;
     }
     
