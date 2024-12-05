@@ -21,26 +21,35 @@ import lombok.Data;
 @Entity
 @Table(name = "VAGA")
 public class VagaModel {
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", updatable = false, nullable = false)
-    private Long id;
-    
-    @NotBlank
-    @Column(name = "numero")
-    private Integer numero;
 
-    @NotBlank
-    @Column(name = "localizacao_horizontal")
-    private Integer locHorizontal;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id", updatable = false, nullable = false)
+  private Long id;
 
-    @NotBlank
-    @Column(name = "localizacao_vertical")
-    private Integer locVertical;
+  @NotBlank
+  @Column(name = "numero")
+  private Integer numero;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "vaga", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<PermanenciaModel> permanencia = new ArrayList<>();
-    
+  @NotBlank
+  @Column(name = "localizacao_horizontal")
+  private Integer locHorizontal;
+
+  @NotBlank
+  @Column(name = "localizacao_vertical")
+  private Integer locVertical;
+
+  @NotBlank
+  @Column(name = "ocupacada")
+  private Boolean isOcupada;
+
+  @JsonManagedReference
+  @OneToMany(mappedBy = "vaga", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  private List<PermanenciaModel> permanencia = new ArrayList<>();
+
+  public Boolean getIsOcupada() {
+    return permanencia.stream()
+        .anyMatch(p -> p.getDataHoraSaida() == null);
+  }
+
 }
