@@ -1,8 +1,8 @@
-# Sistema de Estacionamento
+# Sistema de Estacionamento (Front-end)
 
 - Isaque Loures Valadão (crisper2001)
-- Ítalo André Flores Silva
-- João Victor Ananias e Silva
+- Ítalo André Flores Silva (italoex)
+- João Victor Ananias e Silva (Ananias)
 - Mario Lucas Silva de Paula (Marionsons)
 - Matheus Brenner de Negreiros Brito (MathiasBelmont)
-- Matheus Henrique de Carvalho Batista
+- Matheus Henrique de Carvalho Batista (MatheusHDCB)
