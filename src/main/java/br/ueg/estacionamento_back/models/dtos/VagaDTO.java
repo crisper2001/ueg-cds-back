@@ -13,10 +13,10 @@ public class VagaDTO {
     
     @Schema(description = "A localização horizontal da vaga", example = "1", required = true)
     @NotBlank
-    private Integer localizacaoHorizontal;
+    private Integer locHorizontal;
 
     @Schema(description = "A localização vertical da vaga", example = "1", required = true)
     @NotBlank
-    private Integer localizacaoVertical;
+    private Integer locVertical;
     
 }
