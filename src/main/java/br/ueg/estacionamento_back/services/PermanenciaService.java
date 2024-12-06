@@ -73,9 +73,6 @@ public class PermanenciaService {
         if (Objects.nonNull(permanenciaUpdate.getPlacaVeiculo())) {
             permanencia.setPlacaVeiculo(permanenciaUpdate.getPlacaVeiculo());
         }
-        if (Objects.nonNull(permanenciaUpdate.getValor())) {
-            permanencia.setValor(permanenciaUpdate.getValor());
-        }
     }
 
 }

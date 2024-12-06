@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class PermanenciaDTO {
+public class PermanenciaCreateDTO {
     
     @Schema(description = "A data e hora de entrada", example = "2024-01-01T12:00:00", required = true)
     private LocalDateTime dataHoraEntrada;
